@@ -61,7 +61,7 @@ to quickly create a Cobra application.`,
 				return m.Send(photo)
 
 			default:
-				return m.Send("I don't understand that command.")
+				return m.Send("I don't understand that command, Please, use 'Hi!' or 'Hello!'")
 			}
 		})
 
