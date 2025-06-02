@@ -95,3 +95,6 @@ clean:
 # Release target
 release: clean test build image push
 	@echo "Release $(VERSION) completed successfully!"
+
+print-version:
+	@echo $(VERSION)-$(TARGETARCH)
