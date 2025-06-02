@@ -92,7 +92,7 @@ push:
 clean:
 	@echo "Cleaning build artifacts..."
 	@rm -rf kbot
-	@docker rmi $(REGISTRY)/$(APP):$(VERSION)-$(TARGETARCH) || true
+	@docker rmi $(REGISTRY)/$(REPOSITORY):$(VERSION)-$(TARGETARCH) || true
 
 # Release target
 release: clean test build image push
