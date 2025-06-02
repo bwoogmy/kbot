@@ -7,6 +7,8 @@ RUN make build TARGETARCH=$TARGETARCH
 
 FROM alpine:latest AS certs
 
+RUN echo ">>> Hello from new Dockerfile <<<"
+
 FROM scratch
 WORKDIR /
 COPY --from=builder /go/src/app/kbot .
