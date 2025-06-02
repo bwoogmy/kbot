@@ -5,12 +5,8 @@ COPY . .
 ARG TARGETARCH
 RUN make build TARGETARCH=$TARGETARCH
 
-FROM alpine:latest AS certs
+FROM alpine:latest
 
-RUN echo ">>> Hello from new Dockerfile <<<"
-
-FROM scratch
 WORKDIR /
 COPY --from=builder /go/src/app/kbot .
-COPY --from=certs /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 ENTRYPOINT ["./kbot", "start"]
