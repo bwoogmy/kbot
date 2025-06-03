@@ -64,6 +64,9 @@ jobs:
       - name: Update Helm values.yaml with new image tag
         run: yq -i '.image.tag = env(VERSION)' helm/values.yaml
 
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
       - name: Commit and push updated Helm values.yaml
         run: |
           git config user.name github-actions
@@ -71,7 +74,7 @@ jobs:
           git remote set-url origin https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}
           git add helm/values.yaml
           git commit -am "ci: update image tag to $VERSION"
-          git push
+          git push origin HEAD:develop
 
  
 
