@@ -68,6 +68,7 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
+          git remote set-url origin https://x-access-token:${{ secrets.GHCR_TOKEN }}@github.com/${{ github.repository }}
           git add helm/values.yaml
           git commit -am "ci: update image tag to $VERSION"
           git push
