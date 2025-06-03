@@ -48,6 +48,9 @@ jobs:
     name: CD
     needs: ci
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
 
     steps:
 
@@ -69,12 +72,12 @@ jobs:
 
       - name: Commit and push updated Helm values.yaml
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
           git remote -v
           git add helm/values.yaml
           git commit -am "ci: update image tag to $VERSION" || echo "No changes to commit"
