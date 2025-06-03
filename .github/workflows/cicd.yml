@@ -64,10 +64,13 @@ jobs:
       - name: Update Helm values.yaml with new image tag
         run: yq -i '.image.tag = env(VERSION)' helm/values.yaml
 
+      - name: Print git remote
+        run: git remote -v
+
+      - name: Commit and push updated Helm values.yaml
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
-      - name: Commit and push updated Helm values.yaml
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
