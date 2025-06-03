@@ -5,6 +5,8 @@ REGISTRY := ghcr.io
 REPOSITORY := bwoogmy/kbot
 TARGETARCH := amd64
 
+IMAGE := $(REGISTRY)/$(REPOSITORY):$(VERSION)-$(TARGETOS)-$(TARGETARCH)
+
 # Validate environment variables
 ifeq ($(TARGETOS),)
 $(error TARGETOS is not set)
@@ -14,7 +16,7 @@ $(error TARGETARCH is not set)
 endif
 
 # Phony targets
-.PHONY: help format lint test get build image push clean dev release
+.PHONY: help format lint test get build image push clean dev release print-version
 
 # Help target
 help:
@@ -78,7 +80,7 @@ build: format get
 # Build Docker image
 image:
 	@echo "Building Docker image..."
-	@docker build . -t $(REGISTRY)/$(REPOSITORY):$(VERSION)-$(TARGETARCH) \
+	@docker build . -t $(IMAGE) \
 		--build-arg TARGETARCH=$(TARGETARCH) \
 		--build-arg VERSION=$(VERSION)
 
@@ -86,17 +88,17 @@ image:
 # Push Docker image
 push:
 	@echo "Pushing Docker image..."
-	@docker push $(REGISTRY)/$(REPOSITORY):$(VERSION)-$(TARGETARCH)
+	@docker push $(IMAGE)
 
 # Clean build artifacts
 clean:
 	@echo "Cleaning build artifacts..."
 	@rm -rf kbot
-	@docker rmi $(REGISTRY)/$(REPOSITORY):$(VERSION)-$(TARGETARCH) || true
+	@docker rmi $(IMAGE) || true
 
 # Release target
 release: clean test build image push
 	@echo "Release $(VERSION) completed successfully!"
 
 print-version:
-	@echo $(VERSION)-$(TARGETARCH)
+	@echo $(VERSION)-$(TARGETOS)-$(TARGETARCH)
