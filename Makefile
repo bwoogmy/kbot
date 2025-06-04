@@ -69,13 +69,13 @@ get:
 dev: format get
 	@echo "Building development version..."
 	@CGO_ENABLED=$(CGO_ENABLED) GOOS=$(TARGETOS) GOARCH=$(TARGETARCH) \
-		go build -v -o kbot -ldflags "-X=github.com/den-vasyliev/kbot/cmd.appVersion=$(VERSION)-dev"
+		go build -v -o kbot -ldflags "-X=github.com/bwoogmy/kbot/cmd.appVersion=$(VERSION)-dev"
 
 # Production build
 build: format get
 	@echo "Building production version..."
 	@CGO_ENABLED=$(CGO_ENABLED) GOOS=$(TARGETOS) GOARCH=$(TARGETARCH) \
-		go build -v -o kbot -ldflags "-X=github.com/den-vasyliev/kbot/cmd.appVersion=$(VERSION) -w -s"
+		go build -v -o kbot -ldflags "-X=github.com/bwoogmy/kbot/cmd.appVersion=$(VERSION) -w -s"
 
 # Build Docker image
 image:
