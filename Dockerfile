@@ -12,4 +12,3 @@ FROM alpine:latest
 WORKDIR /
 COPY --from=builder /go/src/app/kbot .
 ENTRYPOINT ["./kbot", "start"]
-ldd /kbot
