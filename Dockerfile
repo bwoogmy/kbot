@@ -1,4 +1,4 @@
-FROM quay.io/projectquay/golang:1.22 as builder
+FROM quay.io/projectquay/golang:1.22 AS builder
 
 WORKDIR /go/src/app
 COPY . .
@@ -12,3 +12,4 @@ FROM alpine:latest
 WORKDIR /
 COPY --from=builder /go/src/app/kbot .
 ENTRYPOINT ["./kbot", "start"]
+ldd /kbot

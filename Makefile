@@ -74,8 +74,7 @@ dev: format get
 # Production build
 build: format get
 	@echo "Building production version..."
-	@CGO_ENABLED=$(CGO_ENABLED) GOOS=$(TARGETOS) GOARCH=$(TARGETARCH) \
-		go build -v -o kbot -ldflags "-X=github.com/bwoogmy/kbot/cmd.appVersion=$(VERSION) -w -s"
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -v -o kbot -ldflags "-w -s"
 
 # Build Docker image
 image:
