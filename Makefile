@@ -5,7 +5,7 @@ VERSION := $(shell git describe --tags --abbrev=0 2>/dev/null || echo "latest")-
 TARGETARCH ?= amd64
 TARGETOS ?= linux
 
-IMAGE_TAG := $(REPO):v$(VERSION)-$(TARGETOS)-$(TARGETARCH)
+IMAGE_TAG := $(REPO):$(VERSION)-$(TARGETOS)-$(TARGETARCH)
 
 .PHONY: format lint test get build arm linux macos windows image push clean
 
