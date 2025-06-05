@@ -67,9 +67,9 @@ get:
 
 # Development build
 dev: format get
-	@echo "Building development version..."
-	@CGO_ENABLED=$(CGO_ENABLED) GOOS=$(TARGETOS) GOARCH=$(TARGETARCH) \
-		go build -v -o kbot -ldflags "-X=github.com/bwoogmy/kbot/cmd.appVersion=$(VERSION)-dev"
+	@echo "Building production version..."
+	@CGO_ENABLED=0 GOOS=linux GOARCH=$(TARGETARCH) \
+		go build -v -o kbot -ldflags "-X=github.com/bwoogmy/kbot/cmd.appVersion=$(VERSION) -w -s"
 
 # Production build
 build: format get
