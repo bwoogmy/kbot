@@ -34,7 +34,7 @@ windows:
 	$(MAKE) build TARGETARCH=amd64 TARGETOS=windows
 
 build: format get
-	CGO_ENABLED=0 GOOS=$(TARGETOS) GOARCH=$(TARGETARCH) go build -v -o kbot -ldflags "-w -s -X=github.com/monakhovm/kbot/cmd.appVersion=$(VERSION)"
+	CGO_ENABLED=0 GOOS=$(TARGETOS) GOARCH=$(TARGETARCH) go build -v -o kbot -ldflags "-w -s -X=github.com/bwoogmy/kbot/cmd.appVersion=$(VERSION)"
 
 image:
 	docker build --build-arg TARGETARCH=$(TARGETARCH) --build-arg TARGETOS=$(TARGETOS) --build-arg VERSION=$(VERSION) -t $(IMAGE_TAG) .
