@@ -1,103 +1,47 @@
-APP := $(shell basename $(shell git remote get-url origin))
-VERSION := $(shell git describe --tags --abbrev=0)-$(shell git rev-parse --short HEAD)
-TARGETOS := linux
-REGISTRY := ghcr.io
-REPOSITORY := bwoogmy/kbot
-TARGETARCH := amd64
+APP := $(shell basename $(shell git remote get-url origin) | cut -d. -f1)
+REGISTRY ?= ghcr.io/bwoogmy
+REPO := $(REGISTRY)/$(APP)
+VERSION := $(shell git describe --tags --abbrev=0 2>/dev/null || echo "latest")-$(shell git rev-parse --short HEAD)
+TARGETARCH ?= amd64
+TARGETOS ?= linux
 
-IMAGE := $(REGISTRY)/$(REPOSITORY):$(VERSION)-$(TARGETOS)-$(TARGETARCH)
+IMAGE_TAG := $(REPO):v$(VERSION)-$(TARGETOS)-$(TARGETARCH)
 
-# Validate environment variables
-ifeq ($(TARGETOS),)
-$(error TARGETOS is not set)
-endif
-ifeq ($(TARGETARCH),)
-$(error TARGETARCH is not set)
-endif
+.PHONY: format lint test get build arm linux macos windows image push clean
 
-# Phony targets
-.PHONY: help format lint test get build image push clean dev release print-version
-
-# Help target
-help:
-	@echo "Available targets:"
-	@echo "  help     - Show this help message"
-	@echo "  format   - Format Go code"
-	@echo "  lint     - Run golangci-lint"
-	@echo "  test     - Run tests"
-	@echo "  get      - Get dependencies"
-	@echo "  build    - Build the application"
-	@echo "  image    - Build Docker image"
-	@echo "  push     - Push Docker image to registry"
-	@echo "  clean    - Clean build artifacts"
-	@echo "  dev      - Development build (with debug info)"
-	@echo "  release  - Production build (optimized)"
-	@echo ""
-	@echo "Configuration:"
-	@echo "  TARGETOS   - Target OS (linux, darwin, windows) [$(TARGETOS)]"
-	@echo "  TARGETARCH - Target architecture (amd64, arm64) [$(TARGETARCH)]"
-	@echo "  CGO_ENABLED - Enable CGO (0 or 1) [$(CGO_ENABLED)]"
-
-
-# Format Go code
 format:
-	@echo "Formatting Go code..."
-	@gofmt -s -w ./
+	gofmt -s -w ./
 
-# Install golangci-lint if not present
-.PHONY: install-lint
-install-lint:
-	@which golangci-lint >/dev/null || (echo "Installing golangci-lint..." && go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest)
+lint:
+	golint ./...
 
-# Run linter
-lint: install-lint
-	@echo "Running linter..."
-	@golangci-lint run ./...
-
-# Run tests
 test:
-	@echo "Running tests..."
-	@go test -v -cover ./...
+	go test -v ./...
 
-# Get dependencies
 get:
-	@echo "Getting dependencies..."
-	@go mod tidy
-	@go mod download
+	go get ./...
 
-# Development build
-dev: format get
-	@echo "Building production version..."
-	@CGO_ENABLED=0 GOOS=linux GOARCH=$(TARGETARCH) \
-		go build -v -o kbot -ldflags "-X=github.com/bwoogmy/kbot/cmd.appVersion=$(VERSION) -w -s"
+arm:
+	$(MAKE) build TARGETARCH=arm64 TARGETOS=linux
 
-# Production build
+linux:
+	$(MAKE) build TARGETARCH=amd64 TARGETOS=linux
+
+macos:
+	$(MAKE) build TARGETARCH=arm64 TARGETOS=darwin
+
+windows:
+	$(MAKE) build TARGETARCH=amd64 TARGETOS=windows
+
 build: format get
-	@echo "Building production version..."
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -v -o kbot -ldflags "-w -s"
+	CGO_ENABLED=0 GOOS=$(TARGETOS) GOARCH=$(TARGETARCH) go build -v -o kbot -ldflags "-w -s -X=github.com/monakhovm/kbot/cmd.appVersion=$(VERSION)"
 
-# Build Docker image
 image:
-	@echo "Building Docker image..."
-	@docker build . -t $(IMAGE) \
-		--build-arg TARGETARCH=$(TARGETARCH) \
-		--build-arg VERSION=$(VERSION)
+	docker build --build-arg TARGETARCH=$(TARGETARCH) --build-arg TARGETOS=$(TARGETOS) --build-arg VERSION=$(VERSION) -t $(IMAGE_TAG) .
 
-
-# Push Docker image
 push:
-	@echo "Pushing Docker image..."
-	@docker push $(IMAGE)
+	docker push $(IMAGE_TAG)
 
-# Clean build artifacts
 clean:
-	@echo "Cleaning build artifacts..."
-	@rm -rf kbot
-	@docker rmi $(IMAGE) || true
-
-# Release target
-release: clean test build image push
-	@echo "Release $(VERSION) completed successfully!"
-
-print-version:
-	@echo $(VERSION)-$(TARGETOS)-$(TARGETARCH)
+	rm -rf kbot
+	-docker rmi $(IMAGE_TAG) || true
