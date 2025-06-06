@@ -1,41 +1,31 @@
 pipeline {
     agent {
-        docker {
-            image 'golang:1.24'
-            args '-u root:root'
+        kubernetes {
+            yaml """
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: go
+    image: golang:1.22
+    command:
+    - cat
+    tty: true
+"""
+            defaultContainer 'go'
         }
     }
     parameters {
-        choice(
-            name: 'OS',
-            choices: ['linux', 'darwin', 'windows'],
-            description: 'Target operating system'
-        )
-        choice(
-            name: 'ARCH',
-            choices: ['amd64', 'arm64'],
-            description: 'Target architecture'
-        )
-        booleanParam(
-            name: 'SKIP_TESTS',
-            defaultValue: false,
-            description: 'Skip running tests'
-        )
-        booleanParam(
-            name: 'SKIP_LINT',
-            defaultValue: false,
-            description: 'Skip running linter'
-        )
+        choice(name: 'OS', choices: ['linux', 'darwin', 'windows'], description: 'Target operating system')
+        choice(name: 'ARCH', choices: ['amd64', 'arm64'], description: 'Target architecture')
+        booleanParam(name: 'SKIP_TESTS', defaultValue: false, description: 'Skip running tests')
+        booleanParam(name: 'SKIP_LINT', defaultValue: false, description: 'Skip running linter')
     }
     stages {
-        stage('Setup tools') {
-            steps {
-                sh 'apt-get update && apt-get install -y make golang-go'
-            }
-        }
         stage('Lint') {
             when { expression { return !params.SKIP_LINT } }
             steps {
+                sh 'go version'
                 sh 'make lint'
             }
         }
