@@ -6,11 +6,21 @@ apiVersion: v1
 kind: Pod
 spec:
   containers:
-  - name: go
-    image: golang:1.24.1
-    command:
-    - cat
-    tty: true
+    - name: go
+      image: golang:1.24.1
+      command: ['cat']
+      tty: true
+    - name: docker
+      image: docker:26.0.0-cli
+      command: ['cat']
+      tty: true
+      volumeMounts:
+        - name: docker-sock
+          mountPath: /var/run/docker.sock
+  volumes:
+    - name: docker-sock
+      hostPath:
+        path: /var/run/docker.sock
 """
             defaultContainer 'go'
         }
@@ -46,8 +56,10 @@ spec:
         }
         stage('Docker Image') {
             steps {
-                sh "make image TARGETOS=${params.OS} TARGETARCH=${params.ARCH}"
-            }
+                container('docker') {
+                    sh 'docker version'
+                    sh "make image TARGETOS=${params.OS} TARGETARCH=${params.ARCH}"
+                }
         }
     }
 }
