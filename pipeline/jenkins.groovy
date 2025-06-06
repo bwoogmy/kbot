@@ -10,24 +10,6 @@ spec:
       image: golang:1.24.1
       command: ['cat']
       tty: true
-    - name: buildx
-      image: moby/buildkit:buildx-stable-1
-      command: ['buildkitd', '--addr', 'tcp://0.0.0.0:1234']
-      tty: true
-    - name: buildctl
-      image: moby/buildkit:buildx-stable-1
-      command: ['sleep', 'infinity']
-      tty: true
-      env:
-        - name: BUILDKIT_HOST
-          value: "tcp://localhost:1234"
-      volumeMounts:
-        - name: docker-config
-          mountPath: /root/.docker
-  volumes:
-    - name: docker-config
-      secret:
-        secretName: regcred
 """
             defaultContainer 'go'
         }
@@ -61,18 +43,6 @@ spec:
                 sh "make build TARGETOS=${params.OS} TARGETARCH=${params.ARCH}"
             }
         }
-       // stage('Docker Image') {
-       //     steps {
-       //         container('buildctl') {
-       //             sh '''
-       //             buildctl build \
-       //               --frontend=dockerfile.v0 \
-       //               --local context=. \
-       //               --local dockerfile=. \
-       //               --output type=image,name=ghcr.io/bwoogmy/kbot:test-buildx,push=true
-       //             '''
-       //         }
-       //     }
-       // }
+        // Docker Image stage delete
     }
 }
