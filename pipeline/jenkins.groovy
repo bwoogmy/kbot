@@ -60,6 +60,7 @@ spec:
                     sh 'docker version'
                     sh "make image TARGETOS=${params.OS} TARGETARCH=${params.ARCH}"
                 }
+            }
         }
     }
 }
