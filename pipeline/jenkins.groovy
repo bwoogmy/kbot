@@ -23,6 +23,11 @@ pipeline {
         )
     }
     stages {
+        stage('Setup tools') {
+            steps {
+                sh 'apt-get update && apt-get install -y make golang-go'
+            }
+        }
         stage('Lint') {
             when { expression { return !params.SKIP_LINT } }
             steps {
