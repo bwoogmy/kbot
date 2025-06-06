@@ -35,6 +35,7 @@ spec:
         stage('Test') {
             when { expression { return !params.SKIP_TESTS } }
             steps {
+                sh 'git config --global --add safe.directory "*"'
                 sh 'make test'
             }
         }
