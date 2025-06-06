@@ -21,6 +21,15 @@ test:
 get:
 	go get ./...
 
+arm:
+	$(MAKE) build TARGETARCH=arm64 TARGETOS=linux
+
+macos:
+	$(MAKE) build TARGETARCH=arm64 TARGETOS=darwin
+
+windows:
+	$(MAKE) build TARGETARCH=amd64 TARGETOS=windows
+
 
 linux:
 	$(MAKE) build TARGETARCH=amd64 TARGETOS=linux
