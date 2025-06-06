@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'golang:1.24'
+            args '-u root:root'
+        }
+    }
     parameters {
         choice(
             name: 'OS',
