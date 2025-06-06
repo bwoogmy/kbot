@@ -1,4 +1,4 @@
-APP := $(shell basename $(shell git remote get-url origin) | cut -d. -f1)
+APP ?= kbot
 REGISTRY ?= ghcr.io/bwoogmy
 REPO := $(REGISTRY)/$(APP)
 VERSION := $(shell git describe --tags --abbrev=0 2>/dev/null || echo "latest")-$(shell git rev-parse --short HEAD)

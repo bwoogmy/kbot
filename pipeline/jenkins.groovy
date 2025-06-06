@@ -25,7 +25,10 @@ spec:
         stage('Lint') {
             when { expression { return !params.SKIP_LINT } }
             steps {
+                sh 'git config --global --add safe.directory "*"'
                 sh 'go version'
+                sh 'go install golang.org/x/lint/golint@latest'
+                sh 'export PATH=$PATH:$(go env GOPATH)/bin'
                 sh 'make lint'
             }
         }
