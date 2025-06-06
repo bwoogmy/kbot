@@ -61,18 +61,18 @@ spec:
                 sh "make build TARGETOS=${params.OS} TARGETARCH=${params.ARCH}"
             }
         }
-        stage('Docker Image') {
-            steps {
-                container('buildctl') {
-                    sh '''
-                    buildctl build \
-                      --frontend=dockerfile.v0 \
-                      --local context=. \
-                      --local dockerfile=. \
-                      --output type=image,name=ghcr.io/bwoogmy/kbot:test-buildx,push=true
-                    '''
-                }
-            }
-        }
+       // stage('Docker Image') {
+       //     steps {
+       //         container('buildctl') {
+       //             sh '''
+       //             buildctl build \
+       //               --frontend=dockerfile.v0 \
+       //               --local context=. \
+       //               --local dockerfile=. \
+       //               --output type=image,name=ghcr.io/bwoogmy/kbot:test-buildx,push=true
+       //             '''
+       //         }
+       //     }
+       // }
     }
 }
