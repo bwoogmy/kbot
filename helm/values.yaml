@@ -2,15 +2,12 @@ replicaCount: 1
 image:
   registry: "ghcr.io"
   repository: "bwoogmy/kbot"
-  tag: "v1.1.1-f67d5e4"
+  tag: "v1.1.1-d6534dd"
   os: "linux"
   arch: "amd64"
-
 command: ["./kbot"]
 args: ["start"]
-
 restartPolicy: "Always"
-
 secret:
   name: "kbot"
   env: "TELE_TOKEN"
