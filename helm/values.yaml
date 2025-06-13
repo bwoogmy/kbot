@@ -5,6 +5,12 @@ image:
   tag: "v1.1.1-f67d5e4"
   os: "linux"
   arch: "amd64"
+
+command: ["./kbot"]
+args: ["start"]
+
+restartPolicy: "Always"
+
 secret:
   name: "kbot"
   env: "TELE_TOKEN"
