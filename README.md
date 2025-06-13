@@ -2,7 +2,7 @@
 
 Telegram bot written in Golang using [Cobra](https://github.com/spf13/cobra) and [telebot.v3](https://github.com/tucnak/telebot).
 
-## 🔗 Live Bot!!
+## 🔗 Live Bot!!!
 
 👉 [@bwoogmy_test_bot](https://t.me/bwoogmy_test_bot)
 
