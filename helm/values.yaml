@@ -2,7 +2,7 @@ replicaCount: 1
 image:
   registry: "ghcr.io"
   repository: "bwoogmy/kbot"
-  tag: "v1.1.1-5f9d454"
+  tag: "v1.1.1-382e5f4"
   os: "linux"
   arch: "amd64"
 command: ["./kbot"]
